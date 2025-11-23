@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<DialogPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.demo.controller.AssetTransferDialogController"
+            prefWidth="600" prefHeight="400">
+
+    <content>
+        <VBox spacing="12">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+
+            <!-- Row 1: Mã tài sản & Tên tài sản -->
+            <HBox spacing="10">
+                <Label text="Mã TS:"/>
+                <TextField fx:id="txtAssetCode" promptText="Nhập mã tài sản" prefWidth="150"/>
+                <Label text="Tên TS:"/>
+                <TextField fx:id="txtAssetName" promptText="Tên tài sản tự động điền" prefWidth="250" editable="false"/>
+            </HBox>
+
+            <!-- Row 2: Kho xuất & Kho nhận -->
+            <HBox spacing="10">
+                <Label text="Kho xuất:"/>
+                <TextField fx:id="txtFromUnit" promptText="Nhập kho xuất" prefWidth="150"/>
+                <Label text="Kho nhận:"/>
+                <TextField fx:id="txtToUnit" promptText="Nhập kho nhận" prefWidth="150"/>
+            </HBox>
+
+            <!-- Row 3: Số lượng & Người phụ trách -->
+            <HBox spacing="10">
+                <Label text="Số lượng:"/>
+                <TextField fx:id="txtQuantity" promptText="Số lượng" prefWidth="100"/>
+                <Label text="Người phụ trách:"/>
+                <TextField fx:id="txtPersonInCharge" promptText="Người phụ trách" prefWidth="200"/>
+            </HBox>
+
+            <!-- Row 4: Số quyết định -->
+            <HBox spacing="10">
+                <Label text="Số quyết định:"/>
+                <TextField fx:id="txtDecisionNumber" promptText="VD: 123/QĐ-UBND" prefWidth="200"/>
+            </HBox>
+
+        </VBox>
+    </content>
+
+    <buttonTypes>
+        <ButtonType text="Bàn giao" buttonData="OK_DONE"/>
+        <ButtonType text="Hủy" buttonData="CANCEL_CLOSE"/>
+    </buttonTypes>
+
+</DialogPane>

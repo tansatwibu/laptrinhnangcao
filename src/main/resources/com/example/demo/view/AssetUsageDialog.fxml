@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<DialogPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.demo.controller.AssetUsageController"
+            prefWidth="640" prefHeight="420">
+
+    <content>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="12" right="12" bottom="12" left="12"/>
+            </padding>
+
+            <Label fx:id="lblHeader" style="-fx-font-weight: bold; -fx-font-size: 14px;" />
+
+            <TableView fx:id="usageTable" prefWidth="600" prefHeight="320">
+                <columns>
+                    <TableColumn fx:id="colUnit" text="Đơn vị" />
+                    <TableColumn fx:id="colQuantity" text="Số lượng" />
+                </columns>
+            </TableView>
+
+        </VBox>
+    </content>
+
+    <buttonTypes>
+        <ButtonType text="Đóng" buttonData="CANCEL_CLOSE"/>
+    </buttonTypes>
+</DialogPane>

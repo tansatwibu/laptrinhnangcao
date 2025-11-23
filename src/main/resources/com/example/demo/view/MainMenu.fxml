@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.demo.controller.MainMenuController"
+            prefWidth="1300" prefHeight="750">
+
+    <!-- ===================== TOP BAR ====================== -->
+    <top>
+        <VBox spacing="12">
+            <padding>
+                <Insets top="12" right="12" bottom="12" left="12"/>
+            </padding>
+
+            <!-- ====== ROW 1: MAIN BUTTONS ====== -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button text="➕ Nhập/Tăng" onAction="#handleAddAsset"/>
+                <Button text="📦 Bàn giao"   onAction="#handleTransferAsset"/>
+                <Button text="⚙️ Giảm"       onAction="#handleReduceAsset"/>
+                <Button text="🧾 Kiểm kê"     onAction="#handleInventory"/>
+                <Button text="📊 Báo cáo"     onAction="#handleReport"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Label text="Xin chào," style="-fx-font-size: 14px;"/>
+                <Label fx:id="lblUsername"
+                       text="User"
+                       style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+
+                <Button text="🚪 Đăng xuất" onAction="#handleLogout"/>
+            </HBox>
+
+            <!-- ====== ROW 2: FILTER BAR ====== -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Tìm kiếm:"/>
+                <TextField fx:id="searchField"
+                           promptText="Nhập mã hoặc tên..." prefWidth="280"/>
+
+                <Label text="Loại:"/>
+                <ComboBox fx:id="filterType" prefWidth="180"/>
+
+                <Button text="🔍 Lọc" onAction="#handleFilter"/>
+                <Button text="♻️ Làm mới" onAction="#handleResetFilter"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- ===================== CENTER TABLE ====================== -->
+    <center>
+        <TableView fx:id="assetTable" prefHeight="650" prefWidth="1300">
+
+            <placeholder>
+                <Label text="Không có dữ liệu" style="-fx-font-size: 14px; -fx-text-fill: grey;"/>
+            </placeholder>
+
+            <columns>
+                <TableColumn fx:id="colCode" text="Mã tài sản" prefWidth="140"/>
+                <TableColumn fx:id="colName" text="Tên tài sản" prefWidth="240"/>
+                <TableColumn fx:id="colType" text="Loại" prefWidth="160"/>
+                <TableColumn fx:id="colSupplier" text="Nhà cung cấp" prefWidth="200"/>
+
+                <TableColumn fx:id="colValue" text="Giá trị (VND)" prefWidth="150"/>
+                <TableColumn fx:id="colQuantityTotal" text="Tổng SL" prefWidth="100"/>
+                <TableColumn fx:id="colQuantityInStock" text="SL tồn" prefWidth="100"/>
+
+                <TableColumn fx:id="colUsageDetail" text="Đơn vị sử dụng" prefWidth="140"/>
+                <TableColumn fx:id="colDetail" text="Chi tiết" prefWidth="140"/>
+            </columns>
+
+        </TableView>
+    </center>
+
+</BorderPane>

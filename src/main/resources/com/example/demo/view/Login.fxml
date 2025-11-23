@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+
+<VBox alignment="TOP_CENTER" spacing="15" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.demo.controller.LoginController"
+      stylesheets="@app.css">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Title -->
+    <Label text="Hệ thống quản lý kho thiết bị y tế" style="-fx-font-size: 24px; -fx-font-weight: bold;" wrapText="true"/>
+
+    <!-- Username Field -->
+    <VBox spacing="5" maxWidth="250">
+        <Label text="Tên đăng nhập:" style="-fx-font-size: 12px;"/>
+        <TextField fx:id="usernameField" promptText="Nhập tên đăng nhập" maxWidth="250"/>
+    </VBox>
+
+    <!-- Password Field với Show Password -->
+    <VBox spacing="5" maxWidth="250">
+        <Label text="Mật khẩu:" style="-fx-font-size: 12px;"/>
+        <StackPane maxWidth="250">
+            <PasswordField fx:id="passwordField" promptText="Nhập mật khẩu" maxWidth="250"/>
+            <TextField fx:id="passwordTextField" promptText="Nhập mật khẩu" maxWidth="250" visible="false" managed="false"/>
+        </StackPane>
+        <CheckBox fx:id="showPasswordCheckBox" text="Hiển thị mật khẩu" onAction="#onShowPasswordChanged"/>
+    </VBox>
+
+    <!-- Login Button -->
+    <Button fx:id="loginButton" text="Đăng nhập" onAction="#onLoginClicked" maxWidth="250"
+            style="-fx-background-color: #c61754; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10px;"/>
+
+    <!-- Forgot Password Link -->
+    <Hyperlink fx:id="forgotPasswordLink" text="Quên mật khẩu?" onAction="#onForgotPasswordClicked"
+               style="-fx-font-size: 12px;"/>
+
+</VBox>

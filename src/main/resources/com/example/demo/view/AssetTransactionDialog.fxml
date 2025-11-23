@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<DialogPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.demo.controller.AssetTransactionController"
+            prefWidth="900">
+
+    <content>
+        <VBox spacing="12">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Label fx:id="lblHeader"
+                   style="-fx-font-size: 16px; -fx-font-weight: bold"/>
+
+            <TableView fx:id="transactionTable" prefHeight="500">
+
+                <columns>
+                    <TableColumn fx:id="colDate" text="Ngày" prefWidth="120"/>
+                    <TableColumn fx:id="colType" text="Loại giao dịch" prefWidth="140"/>
+                    <TableColumn fx:id="colQuantity" text="Số lượng" prefWidth="80"/>
+                    <TableColumn fx:id="colFrom" text="Từ đơn vị" prefWidth="150"/>
+                    <TableColumn fx:id="colTo" text="Đến đơn vị" prefWidth="150"/>
+                    <TableColumn fx:id="colUser" text="Người thực hiện" prefWidth="150"/>
+                    <TableColumn fx:id="colPrice" text="Đơn giá" prefWidth="120"/>
+                </columns>
+
+            </TableView>
+
+        </VBox>
+    </content>
+
+    <buttonTypes>
+        <ButtonType text="Đóng" buttonData="CANCEL_CLOSE"/>
+    </buttonTypes>
+
+</DialogPane>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<DialogPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.demo.controller.AddAssetDialogController"
+            prefWidth="760" prefHeight="650">
+
+    <content>
+        <VBox spacing="12">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+
+            <HBox spacing="10">
+                <Label text="Số quyết định:"/>
+                <TextField fx:id="txtDecisionNumber" promptText="VD: 123/QĐ-UBND" prefWidth="250"/>
+            </HBox>
+
+            <HBox spacing="10">
+                <Label text="Nhà cung cấp:"/>
+                <TextField fx:id="txtSupplier" promptText="Tên nhà cung cấp" prefWidth="250"/>
+            </HBox>
+
+            <Label text="Danh sách tài sản" style="-fx-font-weight: bold;"/>
+
+            <TableView fx:id="assetTable" editable="true"
+                       prefWidth="720" prefHeight="480">
+
+                <columns>
+                    <TableColumn fx:id="colAssetCode" text="Mã TS" prefWidth="120"/>
+                    <TableColumn fx:id="colAssetName" text="Tên tài sản" prefWidth="200"/>
+                    <TableColumn fx:id="colAssetType" text="Loại" prefWidth="120"/>
+                    <TableColumn fx:id="colProductionYear" text="Năm SX" prefWidth="80"/>
+                    <TableColumn fx:id="colUnitPrice" text="Đơn giá" prefWidth="100"/>
+                    <TableColumn fx:id="colQuantity" text="SL" prefWidth="80"/>
+                </columns>
+
+            </TableView>
+
+        </VBox>
+    </content>
+
+    <buttonTypes>
+        <ButtonType text="Lưu" buttonData="OK_DONE"/>
+    </buttonTypes>
+
+</DialogPane>
