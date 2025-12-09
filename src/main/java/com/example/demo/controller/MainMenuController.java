@@ -11,10 +11,13 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.Parent;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class MainMenuController {
     private User currentUser;
@@ -258,7 +261,6 @@ public class MainMenuController {
             new Alert(Alert.AlertType.ERROR, "Không thể mở cửa sổ bàn giao!").showAndWait();
         }
     }
-    @FXML private void handleReduceAsset() { System.out.println("Giảm tài sản..."); }
     @FXML private void handleInventory() { System.out.println("Kiểm kê..."); }
     @FXML private void handleReport() { System.out.println("Báo cáo..."); }
     @FXML private void handleLogout() { System.out.println("Đăng xuất..."); }
@@ -277,4 +279,42 @@ public class MainMenuController {
         this.currentUser = user;
         lblUsername.setText(user.getFullName());   // hoặc user.getUsername()
     }
+
+
+    @FXML
+    private void handleReduceAsset() {
+        try {
+            // Lấy tài sản đang được chọn từ bảng
+            Asset selectedAsset = assetTable.getSelectionModel().getSelectedItem();
+            if (selectedAsset == null) {
+                new Alert(Alert.AlertType.WARNING, "Vui lòng chọn một tài sản để giảm.").showAndWait();
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/view/ReduceAssetDialog.fxml"));
+            Parent root = loader.load();
+
+            ReduceAssetDialogController controller = loader.getController();
+
+            // Tạo Stage mới cho dialog
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Giảm tài sản");
+            dialogStage.initModality(Modality.WINDOW_MODAL); // Đặt dialog là modal
+            dialogStage.initOwner(lblUsername.getScene().getWindow()); // Đặt owner là cửa sổ chính
+            dialogStage.setScene(new javafx.scene.Scene(root));
+
+            controller.setDialogStage(dialogStage);
+            controller.setAsset(selectedAsset); // Truyền tài sản đã chọn vào dialog
+
+            dialogStage.showAndWait(); // Hiển thị và đợi dialog đóng
+
+            // Sau khi dialog đóng, làm mới danh sách tài sản trong bảng
+            loadAssets();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Không thể mở hộp thoại giảm tài sản: " + e.getMessage()).showAndWait();
+        }
+    }
+
 }

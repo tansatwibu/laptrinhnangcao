@@ -66,23 +66,31 @@ public class AssetTransactionController {
         data.clear();
 
         String sql = """
-            SELECT 
-                transaction_date,
-                transaction_type,
-                quantity,
-                IFNULL(from_unit, '') AS from_unit,
-                IFNULL(to_unit, '') AS to_unit,
-                performed_by,
-                unit_price
-            FROM asset_transactions
-            WHERE asset_code = ?
-            ORDER BY transaction_date DESC
+            SELECT * FROM (
+                SELECT transaction_date, transaction_type, quantity,
+                       IFNULL(from_unit, '') AS from_unit,
+                       IFNULL(to_unit, '') AS to_unit,
+                       IFNULL(performed_by, '') AS performed_by,
+                       IFNULL(unit_price, 0) AS unit_price,
+                       IFNULL(reason, '') AS reason
+                FROM asset_transactions
+                WHERE asset_code = ?
+                UNION ALL
+                SELECT reduction_date AS transaction_date, 'REDUCE' AS transaction_type, quantity,
+                       '' AS from_unit, '' AS to_unit,
+                       IFNULL(performed_by, '') AS performed_by,
+                       0 AS unit_price,
+                       IFNULL(reason, '') AS reason
+                FROM asset_reductions
+                WHERE asset_code = ?
+            ) ORDER BY transaction_date DESC
         """;
 
         try (Connection conn = DatabaseUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, assetCode);
+            ps.setString(2, assetCode);
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -91,17 +99,21 @@ public class AssetTransactionController {
 
                     t.setTransactionDate(rs.getString("transaction_date"));
 
-                    // FIX: convert SQL string → enum
+                    // convert SQL string → enum (ensure matching names)
                     String typeStr = rs.getString("transaction_type");
-                    t.setTransactionType(
-                            AssetTransaction.TransactionType.valueOf(typeStr)
-                    );
+                    try {
+                        t.setTransactionType(AssetTransaction.TransactionType.valueOf(typeStr));
+                    } catch (Exception ex) {
+                        // Unknown type: default to IMPORT
+                        t.setTransactionType(AssetTransaction.TransactionType.IMPORT);
+                    }
 
                     t.setQuantity(rs.getInt("quantity"));
                     t.setFromUnit(rs.getString("from_unit"));
                     t.setToUnit(rs.getString("to_unit"));
                     t.setPerformedBy(rs.getString("performed_by"));
                     t.setUnitPrice(rs.getDouble("unit_price"));
+                    t.setReason(rs.getString("reason"));
 
                     data.add(t);
                 }

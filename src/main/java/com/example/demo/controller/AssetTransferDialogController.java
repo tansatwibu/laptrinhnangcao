@@ -134,18 +134,23 @@ public class AssetTransferDialogController {
 
             int qty = Integer.parseInt(txtQuantity.getText());
 
-            int stock = getStock(code, "QTVT");
+            // Use the same connection/transaction to read and update stock
+            PreparedStatement psGetStock = conn.prepareStatement("SELECT quantity_in_stock FROM assets WHERE asset_code = ?");
+            psGetStock.setString(1, code);
+            ResultSet rsStock = psGetStock.executeQuery();
+            int stock = rsStock.next() ? rsStock.getInt("quantity_in_stock") : 0;
+
             if (stock < qty) {
                 warn("Không đủ số lượng trong kho QTVT!");
+                conn.rollback();
                 return;
             }
 
-            // Giảm kho cũ
-            updateStock(code, "QTVT", stock - qty);
-
-            // Tăng kho mới
-            int newStock = getStock(code, txtToUnit.getText());
-            updateStock(code, txtToUnit.getText(), newStock + qty);
+            // Giảm tồn kho trong cùng 1 transaction
+            PreparedStatement psUpdate = conn.prepareStatement("UPDATE assets SET quantity_in_stock = ? WHERE asset_code = ?");
+            psUpdate.setInt(1, stock - qty);
+            psUpdate.setString(2, code);
+            psUpdate.executeUpdate();
 
             String sql = """
                 INSERT INTO asset_transactions(
