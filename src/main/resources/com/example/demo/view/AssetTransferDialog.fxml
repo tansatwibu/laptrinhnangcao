@@ -6,7 +6,8 @@
 
 <DialogPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.demo.controller.AssetTransferDialogController"
-            prefWidth="600" prefHeight="400">
+            prefWidth="600" prefHeight="400"
+            stylesheets="@../style/style.css">
 
     <content>
         <VBox spacing="12">

@@ -10,8 +10,8 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/com/example/demo/view/Login.fxml"));
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/com/example/demo/style/app.css").toExternalForm());
+        Scene scene = new Scene(root, 400, 550);
+        scene.getStylesheets().add(getClass().getResource("/com/example/demo/style/style.css").toExternalForm());
         stage.setScene(scene);
         stage.setTitle("Đăng nhập - QT&VT");
         stage.show();

@@ -1,0 +1,351 @@
+/* ============================================
+   ASSET MANAGEMENT SYSTEM - PROFESSIONAL DESIGN
+   70% White / 30% Red Accent
+   ============================================ */
+
+/* Global Variables */
+* {
+    -primary-color: #c51752;
+    -primary-hover: #a01242;
+    -primary-light: rgba(197, 23, 82, 0.08);
+    -bg-color: #ffffff;
+    -bg-secondary: #fafafa;
+    -text-color: #2c3e50;
+    -text-secondary: #7f8c8d;
+    -border-color: #e8ecef;
+    -white: #ffffff;
+    -shadow-sm: rgba(0, 0, 0, 0.04);
+    -shadow-md: rgba(0, 0, 0, 0.08);
+    -shadow-lg: rgba(0, 0, 0, 0.12);
+}
+
+.root {
+    -fx-background-color: -bg-color;
+    -fx-font-family: "Segoe UI", "SF Pro Display", "Roboto", sans-serif;
+    -fx-font-size: 13px;
+}
+
+/* =====================
+   MAIN HEADER - Clean & Minimal
+   ===================== */
+.main-header {
+    -fx-background-color: -white;
+    -fx-padding: 16 24;
+    -fx-border-color: -border-color;
+    -fx-border-width: 0 0 1 0;
+}
+
+.header-label {
+    -fx-text-fill: -text-color;
+    -fx-font-size: 14px;
+}
+
+/* =====================
+   BUTTONS - Clean Professional Style
+   ===================== */
+.button {
+    -fx-background-color: -white;
+    -fx-text-fill: -text-color;
+    -fx-border-color: -border-color;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 9 18;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, -shadow-sm, 2, 0, 0, 1);
+    -fx-transition: all 0.2s ease;
+}
+
+.button:hover {
+    -fx-background-color: -bg-secondary;
+    -fx-border-color: -primary-color;
+    -fx-text-fill: -primary-color;
+    -fx-effect: dropshadow(three-pass-box, -shadow-md, 4, 0, 0, 2);
+    -fx-translate-y: -1;
+}
+
+.button:pressed {
+    -fx-background-color: -primary-light;
+    -fx-translate-y: 0;
+}
+
+/* Primary Action Buttons - Red Accent (30%) */
+.button.primary-button {
+    -fx-background-color: -primary-color;
+    -fx-text-fill: -white;
+    -fx-border-color: -primary-color;
+}
+
+.button.primary-button:hover {
+    -fx-background-color: -primary-hover;
+    -fx-border-color: -primary-hover;
+    -fx-text-fill: -white;
+}
+
+.button.primary-button:pressed {
+    -fx-background-color: #8a0f38;
+}
+
+/* Logout Button - Subtle Style */
+.main-header .button:last-child {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: -text-secondary;
+}
+
+.main-header .button:last-child:hover {
+    -fx-background-color: -bg-secondary;
+    -fx-text-fill: -primary-color;
+}
+
+/* =====================
+   INPUT FIELDS - Clean & Minimal
+   ===================== */
+.text-field,
+.password-field {
+    -fx-background-color: -white;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 9 14;
+    -fx-font-size: 13px;
+    -fx-text-fill: -text-color;
+    -fx-prompt-text-fill: -text-secondary;
+}
+
+.text-field:focused,
+.password-field:focused {
+    -fx-border-color: -primary-color;
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(three-pass-box, rgba(197, 23, 82, 0.15), 4, 0, 0, 0);
+}
+
+/* =====================
+   COMBOBOX - Professional Style
+   ===================== */
+.combo-box {
+    -fx-background-color: -white;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.combo-box .list-cell {
+    -fx-background-color: -white;
+    -fx-text-fill: -text-color;
+    -fx-padding: 8 12;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: -white;
+    -fx-border-color: -border-color;
+    -fx-effect: dropshadow(three-pass-box, -shadow-lg, 8, 0, 0, 2);
+}
+
+.combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: -primary-light;
+    -fx-text-fill: -primary-color;
+}
+
+.combo-box-popup .list-view .list-cell:selected {
+    -fx-background-color: -primary-color;
+    -fx-text-fill: -white;
+}
+
+/* =====================
+   TABLE VIEW - Professional & Clean
+   ===================== */
+.table-view {
+    -fx-background-color: -white;
+    -fx-border-color: -border-color;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+/* Table Header - Red Accent (30%) */
+.table-view .column-header-background {
+    -fx-background-color: -primary-color;
+}
+
+.table-view .column-header-background .filler {
+    -fx-background-color: -primary-color;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: -white;
+    -fx-font-weight: 600;
+    -fx-font-size: 13px;
+    -fx-alignment: center-left;
+    -fx-padding: 12 16;
+}
+
+.table-view .column-header {
+    -fx-background-color: -primary-color;
+    -fx-border-color: transparent rgba(255, 255, 255, 0.2) transparent transparent;
+    -fx-border-width: 0 1 0 0;
+}
+
+.table-view .column-header:last-child {
+    -fx-border-width: 0;
+}
+
+.table-view .corner {
+    -fx-background-color: -primary-color;
+}
+
+/* Table Rows - White Background (70%) */
+.table-row-cell {
+    -fx-background-color: -white;
+    -fx-border-color: transparent transparent -border-color transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 4 0;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: -bg-secondary;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: -primary-light;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: rgba(197, 23, 82, 0.12);
+    -fx-border-color: -primary-color;
+}
+
+.table-cell {
+    -fx-text-fill: -text-color;
+    -fx-font-size: 13px;
+    -fx-alignment: center-left;
+    -fx-padding: 10 16;
+}
+
+/* Table Placeholder */
+.table-view .placeholder .label {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 14px;
+}
+
+/* =====================
+   SCROLLBAR - Minimal Design
+   ===================== */
+.scroll-bar:vertical,
+.scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-padding: 2;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #d0d0d0;
+    -fx-background-radius: 4;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #a0a0a0;
+}
+
+.scroll-bar .thumb:pressed {
+    -fx-background-color: -primary-color;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+/* =====================
+   LOGIN STYLES
+   ===================== */
+.login-container {
+    -fx-background-color: -bg-secondary;
+    -fx-alignment: center;
+}
+
+.login-card {
+    -fx-background-color: -white;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(three-pass-box, -shadow-lg, 20, 0, 0, 4);
+    -fx-padding: 48 40;
+    -fx-min-width: 420;
+    -fx-max-width: 420;
+    -fx-alignment: center;
+    -fx-spacing: 24;
+}
+
+.login-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: 700;
+    -fx-text-fill: -text-color;
+    -fx-padding: 0 0 8 0;
+}
+
+.login-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: -text-secondary;
+    -fx-padding: 0 0 16 0;
+}
+
+/* =====================
+   LINKS & CHECKBOXES
+   ===================== */
+.hyperlink {
+    -fx-text-fill: -primary-color;
+    -fx-underline: false;
+    -fx-font-size: 13px;
+    -fx-border-color: transparent;
+    -fx-font-weight: 500;
+}
+
+.hyperlink:hover {
+    -fx-text-fill: -primary-hover;
+    -fx-underline: true;
+}
+
+.check-box {
+    -fx-font-size: 13px;
+    -fx-text-fill: -text-color;
+}
+
+.check-box .box {
+    -fx-background-color: -white;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 4;
+    -fx-border-width: 1.5;
+}
+
+.check-box:hover .box {
+    -fx-border-color: -primary-color;
+}
+
+.check-box:selected .box {
+    -fx-background-color: -primary-color;
+    -fx-border-color: -primary-color;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: -white;
+}
+
+/* =====================
+   LABELS - Typography
+   ===================== */
+.label {
+    -fx-text-fill: -text-color;
+    -fx-font-size: 13px;
+}
+
+.label.section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -text-color;
+}
+
+.label.caption {
+    -fx-font-size: 12px;
+    -fx-text-fill: -text-secondary;
+}
