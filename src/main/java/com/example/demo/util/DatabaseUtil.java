@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.sql.ResultSet;
 
@@ -19,6 +20,9 @@ public class DatabaseUtil {
 
             Class.forName("org.sqlite.JDBC");
             Connection conn = DriverManager.getConnection(url);
+
+            // Tự động tạo bảng nếu chưa có
+            createTables(conn);
 
             System.out.println("✅ Kết nối SQLite thành công tại: " + dbPath);
             return conn;
@@ -35,11 +39,53 @@ public class DatabaseUtil {
         }
     }
 
+    private static void createTables(Connection conn) {
+        try (java.sql.Statement stmt = conn.createStatement()) {
+            // Bảng asset_transactions
+            String sqlTransaction = """
+                        CREATE TABLE IF NOT EXISTS asset_transactions (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            asset_code TEXT,
+                            transaction_date TEXT,
+                            transaction_type TEXT,
+                            quantity INTEGER,
+                            from_unit TEXT,
+                            to_unit TEXT,
+                            performed_by TEXT,
+                            unit_price REAL,
+                            reason TEXT,
+                            decision_number TEXT,
+                            production_year INTEGER,
+                            condition_status TEXT
+                        );
+                    """;
+            stmt.execute(sqlTransaction);
+
+            // Bảng asset_reductions (đã có trong reduceAssetQuantity nhưng thêm vào đây cho
+            // chắc)
+            String sqlReduction = """
+                        CREATE TABLE IF NOT EXISTS asset_reductions (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            asset_code TEXT NOT NULL,
+                            reduction_date TEXT NOT NULL,
+                            quantity INTEGER NOT NULL,
+                            reason TEXT,
+                            performed_by TEXT
+                        );
+                    """;
+            stmt.execute(sqlReduction);
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi tạo bảng: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     /** Lấy tồn kho của 1 tài sản */
     public static int getStock(String assetCode, String unit) {
         String sql = "SELECT quantity_in_stock FROM assets WHERE asset_code = ?";
         try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, assetCode);
             ResultSet rs = ps.executeQuery();
@@ -58,7 +104,7 @@ public class DatabaseUtil {
     public static boolean updateStock(String assetCode, String unit, int newQty) {
         String sql = "UPDATE assets SET quantity_in_stock = ? WHERE asset_code = ?";
         try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, newQty);
             ps.setString(2, assetCode);
@@ -70,17 +116,20 @@ public class DatabaseUtil {
             return false;
         }
     }
+
     /**
      * Giảm số lượng của một tài sản và ghi lại giao dịch.
      *
-     * @param assetCode Mã tài sản cần giảm.
+     * @param assetCode        Mã tài sản cần giảm.
      * @param quantityToReduce Số lượng cần giảm.
-     * @param reason Lý do giảm tài sản.
-     * @param username Tên người dùng thực hiện giao dịch.
+     * @param reason           Lý do giảm tài sản.
+     * @param username         Tên người dùng thực hiện giao dịch.
      * @return true nếu giảm thành công, false nếu ngược lại.
-     * @throws SQLException Nếu có lỗi xảy ra trong quá trình thao tác với cơ sở dữ liệu.
+     * @throws SQLException Nếu có lỗi xảy ra trong quá trình thao tác với cơ sở dữ
+     *                      liệu.
      */
-    public static boolean reduceAssetQuantity(String assetCode, int quantityToReduce, String reason, String username) throws SQLException {
+    public static boolean reduceAssetQuantity(String assetCode, int quantityToReduce, String reason, String username)
+            throws SQLException {
         Connection conn = null;
         PreparedStatement updateAssetStmt = null;
         PreparedStatement insertTransactionStmt = null;
@@ -100,17 +149,18 @@ public class DatabaseUtil {
             int rowsAffected = updateAssetStmt.executeUpdate();
 
             if (rowsAffected > 0) {
-                // 2. Đảm bảo bảng ghi giảm tồn tại và ghi lại giao dịch giảm vào `asset_reductions`
+                // 2. Đảm bảo bảng ghi giảm tồn tại và ghi lại giao dịch giảm vào
+                // `asset_reductions`
                 String createTableSql = """
-                    CREATE TABLE IF NOT EXISTS asset_reductions (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        asset_code TEXT NOT NULL,
-                        reduction_date TEXT NOT NULL,
-                        quantity INTEGER NOT NULL,
-                        reason TEXT,
-                        performed_by TEXT
-                    )
-                    """;
+                        CREATE TABLE IF NOT EXISTS asset_reductions (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            asset_code TEXT NOT NULL,
+                            reduction_date TEXT NOT NULL,
+                            quantity INTEGER NOT NULL,
+                            reason TEXT,
+                            performed_by TEXT
+                        )
+                        """;
                 try (PreparedStatement createStmt = conn.prepareStatement(createTableSql)) {
                     createStmt.execute();
                 }
@@ -128,7 +178,8 @@ public class DatabaseUtil {
                 conn.commit(); // Hoàn thành transaction
                 success = true;
             } else {
-                // Nếu không có hàng nào được cập nhật, có thể do asset_id không tồn tại hoặc số lượng không đủ
+                // Nếu không có hàng nào được cập nhật, có thể do asset_id không tồn tại hoặc số
+                // lượng không đủ
                 conn.rollback(); // Hoàn tác transaction
                 success = false;
             }
@@ -155,5 +206,4 @@ public class DatabaseUtil {
         }
         return success;
     }
-
 }

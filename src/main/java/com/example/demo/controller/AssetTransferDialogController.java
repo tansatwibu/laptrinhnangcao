@@ -18,13 +18,20 @@ import static com.example.demo.util.DatabaseUtil.updateStock;
 
 public class AssetTransferDialogController {
 
-    @FXML private TextField txtAssetCode;
-    @FXML private TextField txtAssetName;
-    @FXML private TextField txtFromUnit;
-    @FXML private TextField txtToUnit;
-    @FXML private TextField txtQuantity;
-    @FXML private TextField txtPersonInCharge;
-    @FXML private TextField txtDecisionNumber;
+    @FXML
+    private TextField txtAssetCode;
+    @FXML
+    private TextField txtAssetName;
+    @FXML
+    private TextField txtFromUnit;
+    @FXML
+    private TextField txtToUnit;
+    @FXML
+    private TextField txtQuantity;
+    @FXML
+    private TextField txtPersonInCharge;
+    @FXML
+    private TextField txtDecisionNumber;
 
     private final HashMap<String, Asset> existingAssets = new HashMap<>();
     private User currentUser;
@@ -56,7 +63,7 @@ public class AssetTransferDialogController {
 
         // ============= CÁCH 1: chỉ check khi FOCUS LOST =============
         txtAssetCode.focusedProperty().addListener((obs, oldV, newV) -> {
-            if (!newV) {   // mất focus -> kiểm tra mã tài sản
+            if (!newV) { // mất focus -> kiểm tra mã tài sản
                 validateAssetCode();
             }
         });
@@ -71,8 +78,7 @@ public class AssetTransferDialogController {
     private void loadExistingAssets() {
         try (Connection conn = DatabaseUtil.getConnection()) {
             ResultSet rs = conn.createStatement().executeQuery(
-                    "SELECT asset_code, asset_name, asset_type, supplier FROM assets"
-            );
+                    "SELECT asset_code, asset_name, asset_type, supplier FROM assets");
 
             while (rs.next()) {
                 Asset a = new Asset();
@@ -135,7 +141,8 @@ public class AssetTransferDialogController {
             int qty = Integer.parseInt(txtQuantity.getText());
 
             // Use the same connection/transaction to read and update stock
-            PreparedStatement psGetStock = conn.prepareStatement("SELECT quantity_in_stock FROM assets WHERE asset_code = ?");
+            PreparedStatement psGetStock = conn
+                    .prepareStatement("SELECT quantity_in_stock FROM assets WHERE asset_code = ?");
             psGetStock.setString(1, code);
             ResultSet rsStock = psGetStock.executeQuery();
             int stock = rsStock.next() ? rsStock.getInt("quantity_in_stock") : 0;
@@ -147,17 +154,18 @@ public class AssetTransferDialogController {
             }
 
             // Giảm tồn kho trong cùng 1 transaction
-            PreparedStatement psUpdate = conn.prepareStatement("UPDATE assets SET quantity_in_stock = ? WHERE asset_code = ?");
+            PreparedStatement psUpdate = conn
+                    .prepareStatement("UPDATE assets SET quantity_in_stock = ? WHERE asset_code = ?");
             psUpdate.setInt(1, stock - qty);
             psUpdate.setString(2, code);
             psUpdate.executeUpdate();
 
             String sql = """
-                INSERT INTO asset_transactions(
-                    asset_code, transaction_date, transaction_type,
-                    quantity, from_unit, to_unit, performed_by, unit_price
-                ) VALUES (?, ?, 'TRANSFER', ?, ?, ?, ?, 0)
-            """;
+                        INSERT INTO asset_transactions(
+                            asset_code, transaction_date, transaction_type,
+                            quantity, from_unit, to_unit, performed_by, unit_price
+                        ) VALUES (?, ?, 'TRANSFER', ?, ?, ?, ?, 0)
+                    """;
 
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, code);

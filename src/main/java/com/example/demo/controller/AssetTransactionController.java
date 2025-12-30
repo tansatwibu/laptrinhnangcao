@@ -16,16 +16,25 @@ import java.sql.ResultSet;
 
 public class AssetTransactionController {
 
-    @FXML private Label lblHeader;
-    @FXML private TableView<AssetTransaction> transactionTable;
+    @FXML
+    private Label lblHeader;
+    @FXML
+    private TableView<AssetTransaction> transactionTable;
 
-    @FXML private TableColumn<AssetTransaction, String> colDate;
-    @FXML private TableColumn<AssetTransaction, String> colType;
-    @FXML private TableColumn<AssetTransaction, String> colQuantity;
-    @FXML private TableColumn<AssetTransaction, String> colFrom;
-    @FXML private TableColumn<AssetTransaction, String> colTo;
-    @FXML private TableColumn<AssetTransaction, String> colUser;
-    @FXML private TableColumn<AssetTransaction, String> colPrice;
+    @FXML
+    private TableColumn<AssetTransaction, String> colDate;
+    @FXML
+    private TableColumn<AssetTransaction, String> colType;
+    @FXML
+    private TableColumn<AssetTransaction, String> colQuantity;
+    @FXML
+    private TableColumn<AssetTransaction, String> colFrom;
+    @FXML
+    private TableColumn<AssetTransaction, String> colTo;
+    @FXML
+    private TableColumn<AssetTransaction, String> colUser;
+    @FXML
+    private TableColumn<AssetTransaction, String> colPrice;
 
     private final ObservableList<AssetTransaction> data = FXCollections.observableArrayList();
 
@@ -34,27 +43,21 @@ public class AssetTransactionController {
 
         transactionTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        colDate.setCellValueFactory(c ->
-                new SimpleStringProperty(c.getValue().getTransactionDate()));
+        colDate.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTransactionDate()));
 
         // FIX: enum → String
-        colType.setCellValueFactory(c ->
-                new SimpleStringProperty(c.getValue().getTransactionType().toString()));
+        colType.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTransactionType().toString()));
 
-        colQuantity.setCellValueFactory(c ->
-                new SimpleStringProperty(String.valueOf(c.getValue().getQuantity())));
+        colQuantity.setCellValueFactory(c -> new SimpleStringProperty(String.valueOf(c.getValue().getQuantity())));
 
-        colFrom.setCellValueFactory(c ->
-                new SimpleStringProperty(c.getValue().getFromUnit()));
+        colFrom.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFromUnit()));
 
-        colTo.setCellValueFactory(c ->
-                new SimpleStringProperty(c.getValue().getToUnit()));
+        colTo.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getToUnit()));
 
-        colUser.setCellValueFactory(c ->
-                new SimpleStringProperty(c.getValue().getPerformedBy()));
+        colUser.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPerformedBy()));
 
-        colPrice.setCellValueFactory(c ->
-                new SimpleStringProperty(String.format("%,.0f", c.getValue().getUnitPrice())));
+        colPrice.setCellValueFactory(
+                c -> new SimpleStringProperty(String.format("%,.0f", c.getValue().getUnitPrice())));
 
         transactionTable.setItems(data);
     }
@@ -66,28 +69,28 @@ public class AssetTransactionController {
         data.clear();
 
         String sql = """
-            SELECT * FROM (
-                SELECT transaction_date, transaction_type, quantity,
-                       IFNULL(from_unit, '') AS from_unit,
-                       IFNULL(to_unit, '') AS to_unit,
-                       IFNULL(performed_by, '') AS performed_by,
-                       IFNULL(unit_price, 0) AS unit_price,
-                       IFNULL(reason, '') AS reason
-                FROM asset_transactions
-                WHERE asset_code = ?
-                UNION ALL
-                SELECT reduction_date AS transaction_date, 'REDUCE' AS transaction_type, quantity,
-                       '' AS from_unit, '' AS to_unit,
-                       IFNULL(performed_by, '') AS performed_by,
-                       0 AS unit_price,
-                       IFNULL(reason, '') AS reason
-                FROM asset_reductions
-                WHERE asset_code = ?
-            ) ORDER BY transaction_date DESC
-        """;
+                    SELECT * FROM (
+                        SELECT transaction_date, transaction_type, quantity,
+                               IFNULL(from_unit, '') AS from_unit,
+                               IFNULL(to_unit, '') AS to_unit,
+                               IFNULL(performed_by, '') AS performed_by,
+                               IFNULL(unit_price, 0) AS unit_price,
+                               IFNULL(reason, '') AS reason
+                        FROM asset_transactions
+                        WHERE asset_code = ?
+                        UNION ALL
+                        SELECT reduction_date AS transaction_date, 'REDUCE' AS transaction_type, quantity,
+                               '' AS from_unit, '' AS to_unit,
+                               IFNULL(performed_by, '') AS performed_by,
+                               0 AS unit_price,
+                               IFNULL(reason, '') AS reason
+                        FROM asset_reductions
+                        WHERE asset_code = ?
+                    ) ORDER BY transaction_date DESC
+                """;
 
         try (Connection conn = DatabaseUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, assetCode);
             ps.setString(2, assetCode);
@@ -99,7 +102,7 @@ public class AssetTransactionController {
 
                     t.setTransactionDate(rs.getString("transaction_date"));
 
-                    // convert SQL string → enum (ensure matching names)
+                    // FIX: convert SQL string → enum
                     String typeStr = rs.getString("transaction_type");
                     try {
                         t.setTransactionType(AssetTransaction.TransactionType.valueOf(typeStr));
@@ -114,7 +117,6 @@ public class AssetTransactionController {
                     t.setPerformedBy(rs.getString("performed_by"));
                     t.setUnitPrice(rs.getDouble("unit_price"));
                     t.setReason(rs.getString("reason"));
-
                     data.add(t);
                 }
             }

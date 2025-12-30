@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<DialogPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.demo.controller.InventoryDialogController"
+            prefWidth="780" prefHeight="520"
+            stylesheets="@../style/style.css">
+
+    <content>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="12" right="12" bottom="12" left="12"/>
+            </padding>
+
+            <Label text="Kiểm kê cuối cùng - Nhập số lượng thực tế" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+
+            <TableView fx:id="inventoryTable" prefWidth="740" prefHeight="420">
+                <columns>
+                    <TableColumn fx:id="colCode" text="Mã" prefWidth="120"/>
+                    <TableColumn fx:id="colName" text="Tên" prefWidth="300"/>
+                    <TableColumn fx:id="colInStock" text="SL tồn" prefWidth="120"/>
+                    <TableColumn fx:id="colActual" text="SL thực tế" prefWidth="180"/>
+                </columns>
+            </TableView>
+
+        </VBox>
+    </content>
+
+    <buttonTypes>
+        <ButtonType text="Lưu" buttonData="OK_DONE"/>
+        <ButtonType text="Hủy" buttonData="CANCEL_CLOSE"/>
+    </buttonTypes>
+
+</DialogPane>

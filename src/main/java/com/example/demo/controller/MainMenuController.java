@@ -11,39 +11,55 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.Parent;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.net.URL;
 import java.sql.Statement;
-import javafx.stage.Modality;
+
 import javafx.stage.Stage;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+
+import javafx.stage.Modality;
 
 public class MainMenuController {
     private User currentUser;
 
+    @FXML
+    private Label lblUsername;
 
-    @FXML private Label lblUsername;
+    @FXML
+    private TableView<Asset> assetTable;
 
-    @FXML private TableView<Asset> assetTable;
+    @FXML
+    private TableColumn<Asset, String> colCode;
+    @FXML
+    private TableColumn<Asset, String> colName;
+    @FXML
+    private TableColumn<Asset, String> colType;
+    @FXML
+    private TableColumn<Asset, String> colSupplier;
 
-    @FXML private TableColumn<Asset, String> colCode;
-    @FXML private TableColumn<Asset, String> colName;
-    @FXML private TableColumn<Asset, String> colType;
-    @FXML private TableColumn<Asset, String> colSupplier;
+    @FXML
+    private TableColumn<Asset, String> colValue;
+    @FXML
+    private TableColumn<Asset, String> colQuantityTotal;
+    @FXML
+    private TableColumn<Asset, String> colQuantityInStock;
 
-    @FXML private TableColumn<Asset, String> colValue;
-    @FXML private TableColumn<Asset, String> colQuantityTotal;
-    @FXML private TableColumn<Asset, String> colQuantityInStock;
+    @FXML
+    private TableColumn<Asset, String> colUsageDetail; // hyperlink
+    @FXML
+    private TableColumn<Asset, String> colDetail; // hyperlink
 
-    @FXML private TableColumn<Asset, String> colUsageDetail;   // hyperlink
-    @FXML private TableColumn<Asset, String> colDetail;        // hyperlink
-
-    @FXML private TextField searchField;
-    @FXML private ComboBox<String> filterType;
+    @FXML
+    private TextField searchField;
+    @FXML
+    private ComboBox<String> filterType;
 
     private final ObservableList<Asset> assetList = FXCollections.observableArrayList();
-
 
     @FXML
     public void initialize() {
@@ -57,7 +73,6 @@ public class MainMenuController {
         colDetail.setCellFactory(col -> createHyperlinkCell("Xem lịch sử giao dịch"));
     }
 
-
     /** Tạo cell hyperlink */
     private TableCell<Asset, String> createHyperlinkCell(String text) {
         return new TableCell<>() {
@@ -66,8 +81,10 @@ public class MainMenuController {
             {
                 link.setOnAction(e -> {
                     Asset a = getTableView().getItems().get(getIndex());
-                    if (text.contains("đơn vị")) showUsageDetail(a);
-                    else showTransactionDetail(a);
+                    if (text.contains("đơn vị"))
+                        showUsageDetail(a);
+                    else
+                        showTransactionDetail(a);
                 });
             }
 
@@ -79,27 +96,26 @@ public class MainMenuController {
         };
     }
 
-
     /** ===================== LOAD ASSET LIST ===================== */
     private void loadAssets() {
 
         assetList.clear();
 
         String sql = """
-            SELECT a.asset_code, a.asset_name, a.asset_type, a.supplier,
-                   a.quantity_total, a.quantity_in_stock,
-                   IFNULL((
-                       SELECT SUM(t.unit_price * t.quantity)
-                       FROM asset_transactions t
-                       WHERE t.asset_code = a.asset_code AND t.transaction_type = 'IMPORT'
-                   ), 0) AS total_value
-            FROM assets a
-            ORDER BY a.asset_name
-            """;
+                SELECT a.asset_code, a.asset_name, a.asset_type, a.supplier,
+                       a.quantity_total, a.quantity_in_stock,
+                       IFNULL((
+                           SELECT SUM(t.unit_price * t.quantity)
+                           FROM asset_transactions t
+                           WHERE t.asset_code = a.asset_code AND t.transaction_type = 'IMPORT'
+                       ), 0) AS total_value
+                FROM assets a
+                ORDER BY a.asset_name
+                """;
 
         try (Connection conn = DatabaseUtil.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
 
@@ -121,17 +137,14 @@ public class MainMenuController {
             colType.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAssetType()));
             colSupplier.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getSupplier()));
 
-            colQuantityTotal.setCellValueFactory(c ->
-                    new SimpleStringProperty(String.valueOf(c.getValue().getQuantityTotal()))
-            );
+            colQuantityTotal.setCellValueFactory(
+                    c -> new SimpleStringProperty(String.valueOf(c.getValue().getQuantityTotal())));
 
-            colQuantityInStock.setCellValueFactory(c ->
-                    new SimpleStringProperty(String.valueOf(c.getValue().getQuantityInStock()))
-            );
+            colQuantityInStock.setCellValueFactory(
+                    c -> new SimpleStringProperty(String.valueOf(c.getValue().getQuantityInStock())));
 
-            colValue.setCellValueFactory(c ->
-                    new SimpleStringProperty(String.format("%,.0f", c.getValue().getTotalValue()))
-            );
+            colValue.setCellValueFactory(
+                    c -> new SimpleStringProperty(String.format("%,.0f", c.getValue().getTotalValue())));
 
             assetTable.setItems(assetList);
 
@@ -141,14 +154,12 @@ public class MainMenuController {
         }
     }
 
-
     /* ==================== DETAIL POPUP PLACEHOLDER =================== */
 
     private void showUsageDetail(Asset asset) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/example/demo/view/AssetUsageDialog.fxml")
-            );
+                    getClass().getResource("/com/example/demo/view/AssetUsageDialog.fxml"));
 
             DialogPane pane = loader.load();
 
@@ -169,8 +180,7 @@ public class MainMenuController {
     private void showTransactionDetail(Asset asset) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/example/demo/view/AssetTransactionDialog.fxml")
-            );
+                    getClass().getResource("/com/example/demo/view/AssetTransactionDialog.fxml"));
             DialogPane pane = loader.load();
 
             AssetTransactionController controller = loader.getController();
@@ -185,8 +195,6 @@ public class MainMenuController {
             e.printStackTrace();
         }
     }
-
-
 
     /* ==================== BUTTON EVENTS =================== */
 
@@ -214,7 +222,7 @@ public class MainMenuController {
                     if (!controller.handleSave()) {
                         event.consume();
                     } else {
-                        loadAssets();  // refresh lại
+                        loadAssets(); // refresh lại
                     }
                 });
             }
@@ -227,10 +235,11 @@ public class MainMenuController {
         }
     }
 
-
-    @FXML private void handleTransferAsset() {
+    @FXML
+    private void handleTransferAsset() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/view/AssetTransferDialog.fxml"));
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/example/demo/view/AssetTransferDialog.fxml"));
             DialogPane pane = loader.load();
             AssetTransferDialogController controller = loader.getController();
             controller.setCurrentUser(currentUser);
@@ -261,25 +270,6 @@ public class MainMenuController {
             new Alert(Alert.AlertType.ERROR, "Không thể mở cửa sổ bàn giao!").showAndWait();
         }
     }
-    @FXML private void handleInventory() { System.out.println("Kiểm kê..."); }
-    @FXML private void handleReport() { System.out.println("Báo cáo..."); }
-    @FXML private void handleLogout() { System.out.println("Đăng xuất..."); }
-
-    @FXML private void handleFilter() {
-        System.out.println("Lọc theo: " + filterType.getValue() + " = " + searchField.getText());
-    }
-
-    @FXML private void handleResetFilter() {
-        searchField.clear();
-        filterType.getSelectionModel().clearSelection();
-        loadAssets();
-    }
-
-    public void setCurrentUser(User user) {
-        this.currentUser = user;
-        lblUsername.setText(user.getFullName());   // hoặc user.getUsername()
-    }
-
 
     @FXML
     private void handleReduceAsset() {
@@ -317,4 +307,109 @@ public class MainMenuController {
         }
     }
 
+    @FXML
+    private void handleInventory() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/view/InventoryDialog.fxml"));
+            DialogPane pane = loader.load();
+
+            InventoryDialogController controller = loader.getController();
+
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.setDialogPane(pane);
+            dialog.setTitle("Kiểm kê kho");
+
+            ButtonType okButtonType = pane.getButtonTypes().stream()
+                    .filter(bt -> bt.getButtonData() == ButtonBar.ButtonData.OK_DONE)
+                    .findFirst().orElse(null);
+
+            if (okButtonType != null) {
+                Button okBtn = (Button) pane.lookupButton(okButtonType);
+                okBtn.addEventFilter(javafx.event.ActionEvent.ACTION, event -> {
+                    if (!controller.handleSave()) {
+                        event.consume();
+                    } else {
+                        loadAssets();
+                    }
+                });
+            }
+
+            dialog.showAndWait();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Không thể mở cửa sổ kiểm kê!").showAndWait();
+        }
+    }
+
+    @FXML
+    private void handleReport() {
+        System.out.println("Báo cáo...");
+    }
+
+    @FXML
+    private void handleLogout() {
+        try {
+            // Lấy Stage hiện tại
+            Stage stage = (Stage) lblUsername.getScene().getWindow();
+
+            // BẮT BUỘC: Tắt maximize và fullscreen trước
+            stage.setMaximized(false);
+            stage.setFullScreen(false);
+
+            // Load lại Login.fxml
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/view/Login.fxml"));
+            Parent root = loader.load();
+
+            // Set kích thước TRƯỚC KHI tạo scene
+            stage.setWidth(400);
+            stage.setHeight(550);
+
+            // Tạo scene mới
+            Scene scene = new Scene(root);
+
+            // Thêm CSS
+            URL cssURL = getClass().getResource("/com/example/demo/style/style.css");
+            if (cssURL != null) {
+                scene.getStylesheets().add(cssURL.toExternalForm());
+            }
+
+            // Set scene
+            stage.setScene(scene);
+            stage.setTitle("Đăng nhập - QT&VT");
+
+            // Set lại kích thước SAU KHI set scene (để chắc chắn)
+            stage.setWidth(400);
+            stage.setHeight(550);
+            stage.setResizable(true); // hoặc false nếu không muốn resize
+
+            // Center lại cửa sổ
+            stage.centerOnScreen();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Lỗi");
+            alert.setHeaderText("Không thể đăng xuất!");
+            alert.setContentText("Chi tiết: " + e.getMessage());
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
+    private void handleFilter() {
+        System.out.println("Lọc theo: " + filterType.getValue() + " = " + searchField.getText());
+    }
+
+    @FXML
+    private void handleResetFilter() {
+        searchField.clear();
+        filterType.getSelectionModel().clearSelection();
+        loadAssets();
+    }
+
+    public void setCurrentUser(User user) {
+        this.currentUser = user;
+        lblUsername.setText(user.getFullName()); // hoặc user.getUsername()
+    }
 }

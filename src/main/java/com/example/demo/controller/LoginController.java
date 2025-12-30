@@ -175,4 +175,19 @@ public class LoginController {
             showAlert(Alert.AlertType.ERROR, "Error", "Không thể mở Main Menu.\n" + e.getMessage());
         }
     }
+
+    @FXML
+    public void onOpenDatabaseViewer() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/view/DatabaseViewer.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Database Viewer");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Could not open Database Viewer: " + e.getMessage());
+        }
+    }
 }

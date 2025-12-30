@@ -57,7 +57,8 @@ public class ReduceAssetDialogController {
             return;
         }
 
-        // Lấy username của người dùng hiện tại (bạn cần có một cách để lấy thông tin này)
+        // Lấy username của người dùng hiện tại (bạn cần có một cách để lấy thông tin
+        // này)
         // Ví dụ: String currentUser = LoginController.getCurrentUser();
         String currentUser = "admin"; // Thay thế bằng cách lấy người dùng hiện tại
 
@@ -67,7 +68,8 @@ public class ReduceAssetDialogController {
                 showAlert(Alert.AlertType.INFORMATION, "Thành công", "Giảm tài sản thành công!");
                 dialogStage.close();
             } else {
-                showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể giảm tài sản. Vui lòng kiểm tra lại mã tài sản và số lượng.");
+                showAlert(Alert.AlertType.ERROR, "Lỗi",
+                        "Không thể giảm tài sản. Vui lòng kiểm tra lại mã tài sản và số lượng.");
             }
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Đã xảy ra lỗi khi giảm tài sản: " + e.getMessage());

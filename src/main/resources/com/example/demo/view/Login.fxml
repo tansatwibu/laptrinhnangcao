@@ -49,6 +49,9 @@
         <!-- Login Button -->
         <Button fx:id="loginButton" text="ĐĂNG NHẬP" onAction="#onLoginClicked" maxWidth="300" styleClass="primary-button" defaultButton="true"/>
 
+        <!-- Database Viewer Button (Debug) -->
+        <Button text="Xem Database" onAction="#onOpenDatabaseViewer" maxWidth="300" style="-fx-background-color: transparent; -fx-text-fill: #999; -fx-underline: true; -fx-cursor: hand;"/>
+
     </VBox>
 
 </StackPane>
