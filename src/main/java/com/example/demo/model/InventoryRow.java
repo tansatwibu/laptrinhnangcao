@@ -10,7 +10,8 @@ public class InventoryRow {
     private final StringProperty assetCode = new SimpleStringProperty("");
     private final StringProperty assetName = new SimpleStringProperty("");
     private final IntegerProperty quantityInStock = new SimpleIntegerProperty(0);
-    private final IntegerProperty actualQuantity = new SimpleIntegerProperty(0);
+    // use -1 to indicate "not set" so the UI can display an empty cell
+    private final IntegerProperty actualQuantity = new SimpleIntegerProperty(-1);
 
     public StringProperty assetCodeProperty() { return assetCode; }
     public StringProperty assetNameProperty() { return assetName; }

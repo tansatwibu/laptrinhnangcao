@@ -9,7 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.converter.IntegerStringConverter;
+import javafx.util.StringConverter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,8 +34,31 @@ public class InventoryDialogController {
         colInStock.setCellValueFactory(c -> c.getValue().quantityInStockProperty().asObject());
         colActual.setCellValueFactory(c -> c.getValue().actualQuantityProperty().asObject());
 
-        colActual.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        colActual.setOnEditCommit(e -> e.getRowValue().setActualQuantity(e.getNewValue()));
+        // Converter that displays empty string when value is < 0 (not set),
+        // and parses empty input as -1 (not set)
+        StringConverter<Integer> emptyAwareConverter = new StringConverter<>() {
+            @Override
+            public String toString(Integer object) {
+                if (object == null || object < 0) return "";
+                return object.toString();
+            }
+
+            @Override
+            public Integer fromString(String string) {
+                if (string == null || string.trim().isEmpty()) return -1;
+                try {
+                    return Integer.valueOf(string.trim());
+                } catch (NumberFormatException ex) {
+                    return -1;
+                }
+            }
+        };
+
+        colActual.setCellFactory(TextFieldTableCell.forTableColumn(emptyAwareConverter));
+        colActual.setOnEditCommit(e -> {
+            Integer v = e.getNewValue();
+            e.getRowValue().setActualQuantity(v == null ? -1 : v);
+        });
 
         inventoryTable.setEditable(true);
 
@@ -57,7 +80,7 @@ public class InventoryDialogController {
                 r.setAssetName(rs.getString("asset_name"));
                 int q = rs.getInt("quantity_in_stock");
                 r.setQuantityInStock(q);
-                r.setActualQuantity(q); // mặc định bằng số đang có
+                r.setActualQuantity(-1); // mặc định để trống, chờ người dùng nhập
                 rows.add(r);
             }
 
@@ -84,8 +107,10 @@ public class InventoryDialogController {
 
             int changed = 0;
             for (InventoryRow r : rows) {
-                if (r.getActualQuantity() != r.getQuantityInStock()) {
-                    ps.setInt(1, r.getActualQuantity());
+                // skip rows where actual is not set (negative)
+                int actual = r.getActualQuantity();
+                if (actual >= 0 && actual != r.getQuantityInStock()) {
+                    ps.setInt(1, actual);
                     ps.setString(2, r.getAssetCode());
                     ps.executeUpdate();
                     changed++;
