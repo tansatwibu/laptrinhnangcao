@@ -1,19 +1,17 @@
-module com.example.demo {
-
-    requires javafx.controls;
+module com.ltnc {
+    requires transitive javafx.controls;
+    requires transitive javafx.web; // 🔥 THÊM DÒNG NÀY
     requires javafx.fxml;
     requires java.sql;
-
-    // SQLite JDBC không có module-name nên require theo dạng automatic module:
     requires org.xerial.sqlitejdbc;
+    requires jdk.jsobject;
+    requires org.json;
+    requires org.apache.poi.ooxml;
+    requires org.apache.poi.poi;
 
-    // mở cho JavaFX reflection
-    opens com.example.demo to javafx.fxml;
-    opens com.example.demo.controller to javafx.fxml;
-    opens com.example.demo.model to javafx.base;
+    opens com.ltnc;
+    opens com.ltnc.controller to javafx.fxml, javafx.web;
 
-    // export package cho code khác sử dụng
-    exports com.example.demo;
-    exports com.example.demo.controller;
-    exports com.example.demo.model;
+    exports com.ltnc;
+    exports com.ltnc.controller;
 }
